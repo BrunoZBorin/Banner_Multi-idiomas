@@ -3,40 +3,29 @@
         <div>
             <b-modal id="modalleads" hide-footer title="Dados pessoais">
                 <form>
-                    <div class="form-group row">
+                    <div class="form-group row mb-2">
                         <label for="inputNome" class="col-sm-2 col-form-label">Nome</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="inputNome" placeholder="Nome">
+                            <input v-model="nome" type="text" class="form-control" id="inputNome" placeholder="Nome">
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row mb-2">
                         <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">
-                            <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                            <input v-model="email" type="email" class="form-control" id="inputEmail" placeholder="Email">
                         </div>
                     </div>
-                        <div class="form-group row">
+                        <div class="form-group row mb-2">
                         <label for="inputPassword" class="col-sm-2 col-form-label">Fone</label>
                         <div class="col-sm-10">
-                            <input type="Fone" class="form-control" id="inputFone" placeholder="Fone" pattern="[7-9]{1}[0-9]{9}" required>
+                            <input v-model="fone" type="phone" class="form-control" id="inputFone" placeholder="Fone" pattern="[7-9]{1}[0-9]{9}" required>
                         </div>
                     </div>
-                        <fieldset class="form-group">
-                        <div class="row">
-                            
-                            <div class="col-sm-10">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" >
-                                <label class="form-check-label" for="gridRadios1">
-                                Deseja receber promoções da Jacto
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    </fieldset>
+                        
                     <div class="form-group row">
-                        <div class="col-sm-10">
-                            <button type="submit" class="btn btn-primary">Salvar</button>
+                        <div class="col-9"></div>
+                        <div class="col-lg-3">
+                            <button type="button" @click="passaLeadsWhatts" class="btn btn-success">Salvar</button>
                         </div>
                     </div>
                 </form>
@@ -82,10 +71,11 @@
                 </CarouselSlide>
             </Carousel>
         </div>
-        
-        <a href="https://wa.me/5514998110334?text=Oi!%20Vim%20do%20site%20e%20desejo%20receber%20atendimento" class="whatsappicon" target="_blank">
-        <img src="https://cdn.awsli.com.br/1997/1997501/arquivos/whatsapp.svg" width="60" height="60" alt="Fale Conosco pelo WhatsApp">
-        </a>
+        <div @click="abreModalLeads" class="whatsappicon">
+        <!-- <a href="https://wa.me/5514998110334?text=Oi!%20Vim%20do%20site%20e%20desejo%20receber%20atendimento" class="whatsappicon" target="_blank"> -->
+            <img src="https://cdn.awsli.com.br/1997/1997501/arquivos/whatsapp.svg" width="60" height="60" alt="Fale Conosco pelo WhatsApp">
+        <!-- </a> -->
+        </div>
     
     </div>
   </template>
@@ -93,13 +83,11 @@
      
   import Carousel from './banner/Carousel';
   import CarouselSlide from './banner/CarouselSlide';
-  import ModalLeads from './ModalLeads';
    
   export default {
     components: {
         Carousel,
-        CarouselSlide,
-        ModalLeads
+        CarouselSlide
     },
     mounted(){
         this.listaItens()
@@ -111,7 +99,10 @@
             filtro:'',
             visivel:0,
             direcao:'esquerda',
-            lang:localStorage.getItem('lang') || 'en_GB'
+            lang:localStorage.getItem('lang') || 'en_GB',
+            nome:'',
+            email:'',
+            fone:''
         }
     },
     
@@ -135,7 +126,7 @@
     methods:{
         selecionaItem(item)
         {
-            this.$bvModal.show('modalleads');
+            
             this.item = item
             console.log(this.item.id)
         },
@@ -165,6 +156,18 @@
                     this.itens = res.data;
                     console.log(this.itens)
                 }).catch(console.error())
+        },
+        abreModalLeads(){
+            this.$bvModal.show('modalleads');
+        },
+        passaLeadsWhatts(){
+            if(this.nome == '' || this.email == '' || this.fone == '')
+            {
+                return alert('Por favor, preencha todos os campos')
+            }
+
+            let linkwhatts = "https://wa.me/5514998116666?text=Olá,%20meus%20dados%20são:%20Nome%20"+this.nome+",%20Email-"+this.email+"%20e%20fone%20"+this.fone+"%20e%20desejo%20receber%20atendimento";
+            window.location.href = linkwhatts;
         }
     }
   }
